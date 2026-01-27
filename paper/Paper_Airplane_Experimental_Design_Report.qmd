@@ -1,0 +1,459 @@
+---
+title: "Factors Affecting Flight Time"
+author: 
+  - Sachin Chhikara, Athar Siddiqui, Mustafa Natheir, Irtiza Saleem, Muzzammil Sultaan
+date: 04/11/2025
+date-format: long
+abstract: "Paper airplanes provide a simple but effective way to study basic aerodynamic principles, making them an accessible and affordable way to conduct experiments in physics. Numerous factors can influence flight time in paper airplanes, such as plane design, paper type and weight. This study aims to determine the key factors that impact the flight duration of paper airplanes and analyze their impact through controlled testing. Data was collected by constructing multiple paper airplane models and systematically changing variables such as paper type and plane design. Using the recorded flight times, various trends were identified, allowing us to infer the significance of these influences. The results demonstrate that plane design does impact flight time, with the standard shape recording greater flight times than jet design. The results indicate that it is most effective to maximize flight time by making optimal shape changes in a paper plane. Other variables such as launch angle and air resistance could be examined in future research."
+format: 
+  pdf: 
+    documentclass: article
+    geometry: "margin=1in"
+    titlepage: true
+    titlepage-color: "FFFFFF"
+    titlepage-text-color: "000000"
+    titlepage-rule-height: 2
+---
+
+
+## Introduction
+
+  Paper airplanes are often seen as toys and are used to have fun, however, they can be very useful in studying the principles in aerodynamics and flight. There are a lot of factors influencing how long a paper airplane stays in the air such as its shape, the type of paper used, and the environmental conditions it is thrown in. These factors help us understand the physics behind the flight and how we can change the airplane’s design to alter the performance.
+
+  In this study, we analyze how different design choices affect the flight time. In February 2025, we tested the flight time of a paper airplane and saw that aspects such as weight and paper type can significantly impact a paper airplane’s ability to stay in the air.
+
+We aim to study the following research questions:
+
+- **(RQ1)** How does the shape of a paper airplane affect the time it travels?  
+
+  - *Null Hypothesis*: The shape of the paper airplane has no impact on flight time.  
+  - *Alternative Hypothesis*: The shape of the paper airplane significantly impacts flight time.
+
+- **(RQ2)** Does the type of paper used in the construction of the paper airplane affect flight time?  
+
+  - *Null Hypothesis*: The type of paper has no impact on flight time.  
+  - *Alternative Hypothesis*: The type of paper significantly impacts flight time.
+
+- **(RQ3)** How does wind speed and direction affect airplane flight time? Will the airplane travel more if thrown inside in a controlled environment or outside?  
+
+  - *Null Hypothesis*: Environmental conditions do not impact flight time of a paper airplane.  
+  - *Alternative Hypothesis*: Environmental conditions significantly impact flight time of a paper airplane.
+
+To test these hypotheses, we designed an experiment in which one person folds all the airplanes to maintain consistency, while another person throws them under different conditions. We conducted trials indoor and outdoor using different paper types and airplane designs. Furthermore, we used ANCOVA to analyze the relationship between these independent variables on flight time.
+
+The structure of the paper is as follows: Section 3 outlines our methodology and data collection process. Section 4 discusses the technical component and analysis. Section 5 provides a discussion of the findings and results. Section 6 explores the limitations that were encountered in the study. Section 7 concludes our study and lastly, Section 8 provides an appendix.
+
+## Methodology
+
+
+The experiment was conducted on February 21 in the CCT building on the UTM campus. The indoor section of the experiment was done on the second floor of the CCT building, while the outside section was done in the pathway connecting CCT to Davis. The purpose for selecting a consistent indoor and outdoor location, as well as collecting all our data in the same location around the same time, was to ensure changing variables (such as wind speed and temperature) do not change drastically in the 10-15 minutes it took us to collect the data. That way, we can ensure that the data collection will be consistent and relatively free of biases from outside sources. Each airplane was built by the same person, as well as thrown by the same person, Mustafa, to ensure consistency in both the throwing technique and the building technique.
+
+Environment: Indoor vs Outdoor - Categorical variable
+
+- Indoor trials were conducted on the second floor of the CCT building
+- Outdoor trials were conducted on the pathway connecting CCT to Davis
+
+Airplane Type: Classic vs Jet - Categorical variable
+
+- Classic: This is a traditional airplane design.
+- Jet: A design that improves the aerodynamics of the airplane.
+
+Paper Type: Standard printer paper vs Construction paper - Categorical variable.
+
+- Standard printer paper is the typical paper used in printers.
+- Construction paper is the same width and height of the standard printer paper. except it is slightly heavier and tougher.
+
+The response variable, flight time, was measured using the iPhone’s stopwatch app from the moment the airplane left the thrower's hand to the moment it hit the ground. This was done by the same person every trial to ensure consistency and reduce biases from factors such as the reaction time of different people.
+
+The experimental units were individual paper airplanes, there was a total of 10 paper airplane for each treatment, the treatments being:
+
+- Classic/standard paper
+- Classic/construction paper
+- Jet/standard paper
+- Jet/construction paper
+
+This gave us a total of 40 airplanes, in which we threw each airplane twice, once indoors and once outdoors.
+
+Control: we controlled for factors beyond our control such as throwing technique, this was done by letting the same person throw all the airplanes, this ensures that we do not see a bias that is inserted because of a difference in throwing technique between different throwers
+
+Block: We were blocked by the environment while conducting the experiment. This is important since conditions beyond our control can easily affect the flight time of a paper airplane, such as the wind speed while conducting the experiment outside. 
+
+Randomize: We randomized the order in which we threw the airplanes, although the airplanes were numbered 1-10, each number symbolizing their relative sequence in their respective treatment, which did not indicate the order we threw them in. 
+
+Replicate: each combination of environment, airplane type, and paper type (8 total) were replicated 10 times, giving us a total of 80 trials. Therefore, our experiment follows the balanced design principle.
+
+## Analysis
+The sample size we used for our experiment was 80, since we carried out 10 replicates per treatment.
+
+```{r}
+#| echo: false
+#| message: false
+library(tidyverse)
+library(performance)
+library(knitr)
+
+# Read the data from the csv file
+data <- read.csv(here::here("data", "paper_airplane_data.csv"))
+data = na.omit(data)
+
+# Key data of Distance
+mu_Distance = mean(data$Distance)
+me_Distance = median(data$Distance)
+sd_Distance = sd(data$Distance)
+iqr_Distance = IQR(data$Distance)
+
+# Key data of Flight Time
+mu_FT = mean(data$Flight_Time)
+me_FT = median(data$Flight_Time)
+sd_FT = sd(data$Flight_Time)
+iqr_FT = IQR(data$Flight_Time)
+
+# Key data of Weight
+mu_weight = mean(data$Weight)
+me_weight = median(data$Weight)
+sd_weight = sd(data$Weight)
+iqr_weight = IQR(data$Weight)
+
+# Summary table of Distance
+summary_table_distance = data.frame(Value = c(mu_Distance, me_Distance, 
+                                              sd_Distance, iqr_Distance))
+kable(t(summary_table_distance),
+      col.names = c("Mean", "Median", "SD", "IQR"),
+      caption = "Summary of Distance (inches)",
+      align = "c")
+
+# Summary table of Flight Time
+summary_table_FT = data.frame(Value = c(mu_FT, me_FT, sd_FT, iqr_FT))
+kable(t(summary_table_FT),
+      col.names = c("Mean", "Median", "SD", "IQR"),
+      caption = "Summary of Flight Time (secs)",
+      align = "c")
+
+# Summary table of Weight
+summary_table_weight = data.frame(Value = c(mu_weight, me_weight, sd_weight, 
+                                            iqr_weight))
+kable(t(summary_table_weight),
+      col.names = c("Mean", "Median", "SD", "IQR"),
+      caption = "Summary of Weight (g)",
+      align = "c")
+
+
+```
+
+We notice that the mean and median for distance are relatively close, but the standard deviation is large,
+which indicates a high variability. For flight time, the IQR is larger than the standard deviation, which
+suggests some spread in the middle 50% of the data. Weight appears to be more evenly distributed with less
+variation.
+```{r}
+#| echo: false
+#| message: false
+library(tidyverse)
+library(performance)
+library(knitr)
+
+# Read the data from the csv file
+data = read.csv(file.path(here::here(),"data/paper_airplane_data.csv"))
+data = na.omit(data)
+
+paper_dist <- table(data$Paper)
+paper_percent <- as.numeric(prop.table(paper_dist) * 100)
+
+airplane_type_dist <- table(data$Airplane_type)
+airplane_type_percent <- as.numeric(prop.table(airplane_type_dist) * 100)
+
+location_dist <- table(data$Location)
+location_percent <- as.numeric(prop.table(location_dist) * 100)
+
+total_count = c(as.numeric(paper_dist), as.numeric(airplane_type_dist), as.numeric(location_dist))
+total_percent = c(paper_percent, airplane_type_percent, location_percent)
+
+# Now we combine all our counts and percentage summary stats from our Qualitative variables.
+summary_table <- rbind(Count = total_count, Percentage = total_percent)
+
+colnames(summary_table) <- c(names(paper_dist), names(airplane_type_dist), names(location_dist))
+kable(summary_table, caption = "Summary of Qualitative Variables")
+
+
+```
+
+From the summary of qualitative variables we can see that this study is balanced as each treatment has the
+number of tests.
+```{r}
+#| echo: false
+#| message: false
+#| fig-cap: "Boxplots showing the flight time by paper time indoor"
+
+data$Airplane_type <- tolower(data$Airplane_type)
+data$Airplane_type <- toupper(substr(data$Airplane_type, 1, 1)) %>% paste0(substr(data$Airplane_type, 2, nchar(data$Airplane_type)))
+
+ggplot(filter(data, Location == "Indoor"), aes(x = Paper, y = Flight_Time, fill = Airplane_type)) +
+  geom_boxplot() +
+  labs(title = "Indoor Flight Time by Paper and Airplane Type", x = "Paper Type", y = "Flight Time (sec)") +
+  theme_minimal()
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| fig-cap: "Boxplots showing the flight time by paper time outdoor"
+
+ggplot(filter(data, Location == "Outdoor"), aes(x = Paper, y = Flight_Time, fill = Airplane_type)) +
+  geom_boxplot() +
+  labs(title = "Outdoor Flight Time by Paper and Airplane Type", x = "Paper Type", y = "Flight Time (sec)") +
+  theme_minimal()
+```
+
+We can see for both indoor and outdoor box plots, that paper airplane type of classic design 
+has longer flight time than jet design. And it seems that paper type used to construct
+the paper airplane doesn't have much impact on the flight time.
+
+## Assumptions for ANCOVA
+
+1. Independence
+
+The construction of one airplane doesn’t depend on the other paper airplane. And the throwing of one paper airplane doesn’t depend on the other airplane.
+
+2. Homogeneity of Variance and Normality of Residuals
+
+```{r}
+#| echo: false
+#| message: false
+library(performance)
+model1 <- lm(Flight_Time ~ Paper + Airplane_type + Weight + Distance + Location, data = data)
+
+check_model(model1, check = c("homogeneity", "normality" ))
+
+```
+
+### Shapiro-wilk test for Normality
+
+$H_0$: The data follow normal distribution. \newline
+$H_a$: The data doesn’t follow normal distribution.
+
+Test-statistic: 
+
+W = 0.97214 
+
+p-value  = 0.07773
+
+Since P-value > 0.05, we fail to reject our H_0. Therefore, our model is normal.
+
+
+
+## Model
+
+```{r}
+#| echo: false
+#| message: false
+library(broom)
+library(knitr)
+
+
+model1 <- lm(Flight_Time ~ Paper + Airplane_type + Weight + Distance + Location, data = data)
+
+
+summary_df <- tidy(model1) %>%
+  mutate(
+    term = recode(term,
+      "(Intercept)" = "Intercept",
+      "PaperPrinter" = "Paper (Printer)",
+      "Airplane_typeJet" = "Airplane Type (Jet)",
+      "Weight" = "Weight",
+      "Distance" = "Distance",
+      "LocationOutdoor" = "Location (Outdoor)"
+    ),
+    `p value` = signif(p.value, 5),
+    `t value` = signif(statistic, 3),
+    `Estimate` = signif(estimate, 3),
+    `Std. Error` = signif(std.error, 3)
+  ) %>%
+  select(term, Estimate, `Std. Error`, `t value`, `p value`)
+
+kable(summary_df, caption = "Regression Coefficients")
+
+
+
+
+```
+
+
+$\hat{Y}$ = 2.463591 - 0.223179$I_{PRINTER}$ - 0.620576$I_{JET}$ - 0.149671$x_{WEIGHT}$ + 0.003230$x_{DISTANCE}$ - 0.009643$I_{OUTDOOR}$ 
+
+$\hat{Y}$ is the response variable, Flight time of the paper airplanes in seconds.
+
+$I_{PRINTER}$ is an indicator variable whether the paper airplane was constructed using Printer paper.
+
+$I_{JET}$ is an indicator variable whether whether paper airplane was 
+constructed using the jet design.
+
+$x_{WEIGHT}$ is a quantitative variable that measures the weight of the paper airplane in grams.
+
+$x_{DISTANCE}$ is a quantitative variable that measures the distance traveled by the paper airplane in inches.
+
+$I_{OUTDOOR}$ is an indicator variable whether whether paper airplane was thrown Outdoors.
+
+
+
+## Dicussion/Results
+Taking a look at our ANCOVA results, we can say with confidence that:
+
+RQ1: We reject our null hypothesis as p < 0.05 
+
+RQ2 : We fail to reject our null hypothesis as p > 0.05
+
+RQ3: We fail to reject our null hypothesis as p > 0.05 
+
+The purpose of our experiment was to determine which factors would significantly affect a paper airplane’s flight time. 
+
+Using an ANCOVA model, we selected our factors, such as the shape of a paper airplane (RQ1), the type of paper used in the construction of the paper airplane (RQ2) and environmental factors affecting a paper airplane’s flight time (RQ3).
+
+According to the ANCOVA results, the shape of the paper airplane, RQ1, classic versus jet, did have a significant impact on flight time. This means the classic shape of a paper airplane is a better choice when creating a paper airplane.
+
+The type of paper used to create the paper airplane, RQ2, did not have a significant impact on flight time. This factor was found to be irrelevant, after our findings, when creating paper airplanes of either printer paper or construction paper. 
+
+As for whether location is a factor impacting the flight time of a paper airplane, RQ3, we found that there was no such difference in throwing a paper airplane either indoors or outdoors. The conditions for indoors were that the windspeed and direction was negligible, meaning it did not have an impact on the flight time for all the shapes and types paper airplanes used. As for the outdoor conditions, the windspeed was minimal-to-none which reduced any bias for flight time being affected, again for all the paper airplanes used. 
+
+Weight factor:
+Looking at whether a paper airplane’s weight was a factor impacting its flight time we found that there was no significant difference (p > 0.05). We can conclude, from this experiment, that a paper airplane’s weight is not a factor which impacts a paper airplane’s flight time. 
+
+Distance factor:
+We also confirmed the notion, based on our ANCOVA model, that the more distance a paper airplane covers, the longer their flight time is (p < 0.05). This means that the distance factor does have an impact on a paper airplane’s flight time. 
+
+Based on all these findings, we can conclude that the shape of a paper airplane is the most important factor when creating paper airplanes to gain a longer flight time. We suggest that creating a Classic shape of a paper airplane will give you longer flight times than a Jet design paper airplane.
+
+## Limitations
+In our study, we examined how the airplane shape, paper type, and environmental conditions impact flight time using ANCOVA. The first limitation we had was the sample size because even though we conducted multiple trials, a larger dataset would have provided a more accurate conclusion. Another limitation would be that there may have been slight inconsistencies in the throwing technique even though the same person threw it, this could alter the result of each throw. Furthermore, environmental conditions could have affected the time the airplane was in the air because when outdoors, slight wind could have changed the flight time which would directly impact our results. The way we would fix these limitations is by increasing the sample size, ensuring each throw is consistent, and only testing indoors.
+
+Another limitation is the way we folded the paper airplanes because the designs could have had minor inconsistencies from one plane to another which would affect the aerodynamics of the airplane. We would fix this limitation by ensuring each paper airplane is made more carefully and with more caution to ensure consistency. If we were to redo the study, we would increase the sample size and test in indoor spaces only as this would narrow down the limitations and provide more accurate results.
+
+
+## Conclusion
+The aim of this research was to identify which variables have a significant influence on the flight duration of a paper airplane. Our analysis revealed that airplane design (Classic vs. Jet) was the sole statistically significant variable (p < 0.05), with Classic designs having longer flight durations. Paper type (Construction vs. Printer), weight, and environmental conditions (Indoor vs. Outdoor) were not significant at determining flight duration (p > 0.05), suggesting that these factors can be considered secondary while optimizing a paper airplane to fly longer.
+
+While our findings illuminated aerodynamics using simple paper airplane models, there were certain limitations in the study. Throwing style differences, minor deviation in the making of the airplane, and ambient environmental factors like changes in the wind or air resistance and temperature may have been contributing elements that influenced results. Increasing the sample size may provide stronger conclusions. Additionally, researchers could explore how launch angle, throwing force and centre of mass can impact flight duration time in order to address some of the limitations present in our study. It would be encouraged to add motion tracking technology or to build simulation models using software to predict flight time based on physical parameters as well to deepen our understanding of flight mechanics.
+
+In conclusion, our study confirms that the design of a paper airplane has the largest impact on its flight duration over the other variables such as weight, environment and paper type.
+
+
+## Appendix
+No use of AI was used to in the code or writing of this paper.
+```{r}
+#| eval: false
+
+library(tidyverse)
+library(performance)
+library(knitr)
+library(broom)
+
+# Read the data from the csv file
+data = read.csv(file.path(here::here(),"data/paper_airplane_data.csv"))
+data = na.omit(data)
+
+# Key data of Distance
+mu_Distance = mean(data$Distance)
+me_Distance = median(data$Distance)
+sd_Distance = sd(data$Distance)
+iqr_Distance = IQR(data$Distance)
+
+# Key data of Flight Time
+mu_FT = mean(data$Flight_Time)
+me_FT = median(data$Flight_Time)
+sd_FT = sd(data$Flight_Time)
+iqr_FT = IQR(data$Flight_Time)
+
+# Key data of Weight
+mu_weight = mean(data$Weight)
+me_weight = median(data$Weight)
+sd_weight = sd(data$Weight)
+iqr_weight = IQR(data$Weight)
+
+# Summary table of Distance
+summary_table_distance = data.frame(Value = c(mu_Distance, me_Distance, 
+                                              sd_Distance, iqr_Distance))
+kable(t(summary_table_distance),
+      col.names = c("Mean", "Median", "SD", "IQR"),
+      caption = "Summary of Distance (inches)",
+      align = "c")
+
+# Summary table of Flight Time
+summary_table_FT = data.frame(Value = c(mu_FT, me_FT, sd_FT, iqr_FT))
+kable(t(summary_table_FT),
+      col.names = c("Mean", "Median", "SD", "IQR"),
+      caption = "Summary of Flight Time (secs)",
+      align = "c")
+
+# Summary table of Weight
+summary_table_weight = data.frame(Value = c(mu_weight, me_weight, sd_weight, 
+                                            iqr_weight))
+kable(t(summary_table_weight),
+      col.names = c("Mean", "Median", "SD", "IQR"),
+      caption = "Summary of Weight (g)",
+      align = "c")
+
+paper_dist <- table(data$Paper)
+paper_percent <- as.numeric(prop.table(paper_dist) * 100)
+
+airplane_type_dist <- table(data$Airplane_type)
+airplane_type_percent <- as.numeric(prop.table(airplane_type_dist) * 100)
+
+location_dist <- table(data$Location)
+location_percent <- as.numeric(prop.table(location_dist) * 100)
+
+total_count = c(as.numeric(paper_dist), as.numeric(airplane_type_dist), as.numeric(location_dist))
+total_percent = c(paper_percent, airplane_type_percent, location_percent)
+
+# Now we combine all our counts and percentage summary stats from our Qualitative variables.
+summary_table <- rbind(Count = total_count, Percentage = total_percent)
+
+colnames(summary_table) <- c(names(paper_dist), names(airplane_type_dist), names(location_dist))
+kable(summary_table, caption = "Summary of Qualitative Variables")
+
+#Plots
+data$Airplane_type <- tolower(data$Airplane_type)
+data$Airplane_type <- toupper(substr(data$Airplane_type, 1, 1)) %>% paste0(
+  substr(data$Airplane_type, 2, nchar(data$Airplane_type)))
+
+ggplot(filter(data, Location == "Indoor"), aes(x = Paper, y = Flight_Time, fill = Airplane_type)) +
+  geom_boxplot() +
+  labs(title = "Indoor Flight Time by Paper and Airplane Type", 
+       x = "Paper Type", y = "Flight Time (sec)") +
+  theme_minimal()
+
+ggplot(filter(data, Location == "Outdoor"), aes(x = Paper, y = Flight_Time, fill = Airplane_type)) +
+  geom_boxplot() +
+  labs(title = "Outdoor Flight Time by Paper and Airplane Type", 
+       x = "Paper Type", y = "Flight Time (sec)") +
+  theme_minimal()
+
+#Model
+model1 <- lm(Flight_Time ~ Paper + Airplane_type + Weight + Distance + Location, data = data)
+
+summary_df <- tidy(model1) %>%
+  mutate(
+    term = recode(term,
+      "(Intercept)" = "Intercept",
+      "PaperPrinter" = "Paper (Printer)",
+      "Airplane_typeJet" = "Airplane Type (Jet)",
+      "Weight" = "Weight",
+      "Distance" = "Distance",
+      "LocationOutdoor" = "Location (Outdoor)"
+    ),
+    `p value` = signif(p.value, 5),
+    `t value` = signif(statistic, 3),
+    `Estimate` = signif(estimate, 3),
+    `Std. Error` = signif(std.error, 3)
+  ) %>%
+  select(term, Estimate, `Std. Error`, `t value`, `p value`)
+
+kable(summary_df, caption = "Regression Coefficients")
+
+#Assumptions
+
+check_model(model1, check = c("normality", "homogeneity"))
+shapiro.test(residuals(model1))
+
+
+
+```
+
