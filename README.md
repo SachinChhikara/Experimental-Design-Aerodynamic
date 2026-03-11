@@ -10,3 +10,6 @@ This experiment design to test what factors affect the flight time of paper airp
 The repo is structured as:
 -   `data` contains the raw data as obtained from the experiment.
 -   `paper` contains the files used to generate the paper and paper itself as well
+
+## Authors
+Sachin Chhikara, Athar Siddiqui, Mustafa Natheir, Irtiza Saleem, Muzzammil Sultaan
