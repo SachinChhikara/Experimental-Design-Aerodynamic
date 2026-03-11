@@ -3,7 +3,7 @@
 
 ## Overview
 
-This experiment design to test what factors affect the flight time of paper airplane. And this experiment was conducted at UTM in the CCT building on the February 21, 2025. We test Factors such as enviroment, airplane type, paper type , flight distance.
+This experiment design to test what factors affect the flight time of paper airplane. And this experiment was conducted at UTM in the CCT building on the February 21, 2025. We test factors such as enviroment, airplane type, paper type , flight distance.
 
 
 ## File Structure
