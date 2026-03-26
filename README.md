@@ -12,4 +12,4 @@ The repo is structured as:
 -   `paper` contains the files used to generate the paper and paper itself as well
 
 ## Authors
-Sachin Chhikara, Athar Siddiqui, Mustafa Natheir, Irtiza Saleem, Muzzammil Sultaan
+Sachin Chhikara, Athar Siddiqui, Mustafa Natheir, [Irtiza Saleem](https://github.com/Pickamon), [Muzzammil Sultaan](https://github.com/mhsmhs123)
